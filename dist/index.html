@@ -1,0 +1,20 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scarybox</title>
+    <style>
+        body { background: #000; margin: 0; padding: 0; width: 100%; height: 100%; }
+        .eye { position: absolute; }
+        .ball { position: absolute; }
+        .pupil { position: relative; }
+        #eye-right { left: 600px; }
+    </style>
+</head>
+<body>
+    <div class="eye"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/></div>
+    <div class="eye" id="eye-right"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-right" src="pupil.png"/></div>
+    <script src="main.js"></script>
+</body>
+</html>
