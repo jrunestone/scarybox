@@ -10,11 +10,18 @@
         .ball { position: absolute; }
         .pupil { position: relative; }
         #eye-right { left: 600px; }
+        #facecanvas { display: none; position: absolute; top: 448px; }
     </style>
 </head>
 <body>
     <div class="eye"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/></div>
     <div class="eye" id="eye-right"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-right" src="pupil.png"/></div>
+    
+    <video autoplay muted playsinline hidden id="video" style="width: auto; height: auto;"></video>
+    <canvas id="facecanvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
     <script src="main.js"></script>
 </body>
 </html>
