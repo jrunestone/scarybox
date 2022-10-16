@@ -9,13 +9,15 @@
         .eye { position: absolute; }
         .ball { position: absolute; width: 370px; }
         .pupil { position: relative; width: 175px; }
+        .shadow { position: absolute; left: 0; }
+        .shadow.blink { background: #000; }
         #eye-right { left: 534px; }
         #facecanvas { display: none; position: absolute; top: 448px; }
     </style>
 </head>
 <body>
-    <div class="eye"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/></div>
-    <div class="eye" id="eye-right"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-right" src="pupil.png"/></div>
+    <div class="eye"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/><img class="shadow" src="shadow.png"/></div>
+    <div class="eye" id="eye-right"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-right" src="pupil.png"/><img class="shadow" src="shadow.png"/></div>
     
     <video autoplay muted playsinline hidden id="video" style="width: auto; height: auto;"></video>
     <canvas id="facecanvas"></canvas>
