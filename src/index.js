@@ -3,6 +3,7 @@ import TWEEN from '@tweenjs/tween.js';
 const DEVICE_WIDTH = 1016;
 const DEVICE_HEIGHT = 455;
 const DEBUG = window.location.search.indexOf('debug=1') !== -1;
+let FACE = true;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('facecanvas');
@@ -17,6 +18,8 @@ const min = { x: 37, y: 41 };
 const max = { x: 178, y: 182 };
 
 let position = {...min};
+
+document.onclick = () => { FACE = !FACE; }
 
 // Face Mesh Demo by Andy Kong
 // Base Javascript for setting up a camera-streaming HTML webpage.
@@ -49,7 +52,9 @@ const newTarget = () => {
 };
 
 const render = async (time) => {
-    facepred = await fmesh.estimateFaces(video);
+    if (FACE) {
+        facepred = await fmesh.estimateFaces(video);
+    }
 
     if (DEBUG) {
         ctx.drawImage(video, 0, 0);
@@ -86,7 +91,7 @@ const drawFace = (face) => {
 };
 
 const lookAt = () => {
-    return facepred && facepred.length ? lookAtFace : lookAtRandom;
+    return FACE && facepred && facepred.length ? lookAtFace : lookAtRandom;
 };
 
 const lookAtRandom = () => {
