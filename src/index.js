@@ -64,8 +64,8 @@ const render = async (time) => {
         }
     }
 
-    requestAnimationFrame(render);
     TWEEN.update(time);
+    requestAnimationFrame(render);
 };
 
 const drawFace = (face) => {
