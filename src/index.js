@@ -13,6 +13,8 @@ let ctx = null;
 
 const leftPupil = document.getElementById('pupil-left');
 const rightPupil = document.getElementById('pupil-right');
+const upperLids = document.getElementsByClassName('lid-upper');
+const lowerLids = document.getElementsByClassName('lid-lower');
 
 const min = { x: 37, y: 41 };
 const max = { x: 178, y: 182 };
@@ -138,6 +140,23 @@ const lookAtFace = () => {
         .start();
 };
 
+const blink = () => {
+    let lidPos = { x: 0, y: 0 };
+    const lidTarget = { x: 0, y: 170 };
+
+    new TWEEN.Tween(lidPos)
+        .to(lidTarget, 400)
+        .easing(TWEEN.Easing.Exponential.In)
+        .onUpdate(() => {
+            upperLids.forEach(x => x.style.transform = `translate(0px, ${lidPos.y}px)`);
+            lowerLids.forEach(x => x.style.transform = `translate(0px, ${-lidPos.y}px)`);
+        })
+        .repeat(1)
+        .yoyo(true)
+        .onComplete(() => { setTimeout(blink, 1000 + Math.random() * 7000); })
+        .start();
+};
+
 (async () => {
     await setupCamera();
     video.play();
@@ -152,5 +171,7 @@ const lookAtFace = () => {
     fmesh = await facemesh.load({ detectionConfidence: 0.9, maxFaces: 1 });
 
     lookAtRandom();
+    blink();
+    
     requestAnimationFrame(render);
 })();
