@@ -57,7 +57,7 @@ const newTarget = () => {
 
 const render = async (time) => {
     if (FACE) {
-        facepred = await fmesh.estimateFaces(video, { predictIrises: false });
+        facepred = await fmesh.estimateFaces(video);
     }
 
     if (DEBUG) {
