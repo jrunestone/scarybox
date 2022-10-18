@@ -21,7 +21,8 @@ const max = { x: 178, y: 182 };
 
 let position = {...min};
 
-document.onclick = () => { FACE = !FACE; }
+document.getElementById('eye-right').onclick = () => { FACE = !FACE; }
+document.getElementById('eye-left').onclick = () => { document.body.webkitRequestFullscreen(); }
 
 // Face Mesh Demo by Andy Kong
 // Base Javascript for setting up a camera-streaming HTML webpage.
