@@ -55,7 +55,7 @@ const newTarget = () => {
 
 const render = async (time) => {
     if (FACE) {
-        facepred = await fmesh.estimateFaces(video);
+        facepred = await fmesh.estimateFaces(video, { predictIrises: false });
     }
 
     if (DEBUG) {
@@ -159,6 +159,8 @@ const blink = () => {
 
 (async () => {
     await setupCamera();
+    await tf.setBackend('webgl');
+
     video.play();
 
     if (DEBUG) {
