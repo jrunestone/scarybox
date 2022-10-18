@@ -8,9 +8,13 @@ let FULLSCREEN = false;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('facecanvas');
-let fmesh = null;
+
 let facepred = null;
-let ctx = null;
+let dbgCtx = null;
+let canv = document.createElement('canvas');
+canv.width = DEVICE_WIDTH;
+canv.height = DEVICE_HEIGHT;
+let ctx = canv.getContext('2d');
 
 const leftPupil = document.getElementById('pupil-left');
 const rightPupil = document.getElementById('pupil-right');
@@ -24,6 +28,8 @@ let position = {...min};
 
 document.getElementById('eye-right').onclick = () => { FACE = !FACE; }
 document.getElementById('eye-left').onclick = () => { FULLSCREEN = !FULLSCREEN; FULLSCREEN ? document.documentElement.webkitRequestFullscreen() : document.webkitExitFullscreen(); }
+
+const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
 
 // Face Mesh Demo by Andy Kong
 // Base Javascript for setting up a camera-streaming HTML webpage.
@@ -56,12 +62,14 @@ const newTarget = () => {
 };
 
 const render = async (time) => {
+    ctx.drawImage(video, 0, 0);
+
     if (FACE) {
-        facepred = await fmesh.estimateFaces(video);
+        worker.postMessage(ctx.getImageData(0, 0, DEVICE_WIDTH, DEVICE_HEIGHT));
     }
 
     if (DEBUG) {
-        ctx.drawImage(video, 0, 0);
+        dbgCtx.drawImage(video, 0, 0);
 
         if (facepred && facepred.length) {
             drawFace(facepred[0]);
@@ -75,23 +83,23 @@ const render = async (time) => {
 const drawFace = (face) => {
     const bb = face.boundingBox;
 
-    ctx.fillStyle = 'cyan';
-    ctx.strokeStyle = 'cyan';
+    dbgCtx.fillStyle = 'cyan';
+    dbgCtx.strokeStyle = 'cyan';
     
     face.scaledMesh.forEach(pt => {
-        ctx.beginPath();
-        ctx.ellipse(pt[0], pt[1], 3, 3, 0, 0, 2*Math.PI)
-        ctx.fill();
+        dbgCtx.beginPath();
+        dbgCtx.ellipse(pt[0], pt[1], 3, 3, 0, 0, 2*Math.PI)
+        dbgCtx.fill();
     });
 
-    ctx.beginPath();
-    ctx.rect(bb.topLeft[0], bb.topLeft[1], bb.bottomRight[0] - bb.topLeft[0], bb.bottomRight[1] - bb.topLeft[1]);
-    ctx.stroke();
+    dbgCtx.beginPath();
+    dbgCtx.rect(bb.topLeft[0], bb.topLeft[1], bb.bottomRight[0] - bb.topLeft[0], bb.bottomRight[1] - bb.topLeft[1]);
+    dbgCtx.stroke();
 
-    ctx.font = '16px serif';
+    dbgCtx.font = '16px serif';
     const cx = bb.topLeft[0] + ((bb.bottomRight[0] - bb.topLeft[0]) / 2);
     const cy = bb.topLeft[1] + ((bb.bottomRight[1] - bb.topLeft[1]) / 2);
-    ctx.fillText(`${cx}, ${cy}`, 10, 20);
+    dbgCtx.fillText(`${cx}, ${cy}`, 10, 20);
 };
 
 const lookAt = () => {
@@ -150,8 +158,13 @@ const blink = () => {
         .to(lidTarget, 400)
         .easing(TWEEN.Easing.Exponential.In)
         .onUpdate(() => {
-            upperLids.forEach(x => x.style.transform = `translate(0px, ${lidPos.y}px)`);
-            lowerLids.forEach(x => x.style.transform = `translate(0px, ${-lidPos.y}px)`);
+            for (const lid of upperLids) {
+                lid.style.transform = `translate(0px, ${lidPos.y}px)`
+            }
+            
+            for (const lid of lowerLids) {
+                lid.style.transform = `translate(0px, ${-lidPos.y}px)`
+            }
         })
         .repeat(1)
         .yoyo(true)
@@ -161,21 +174,22 @@ const blink = () => {
 
 (async () => {
     await setupCamera();
-    await tf.setBackend('webgl');
 
     video.play();
 
     if (DEBUG) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        ctx = canvas.getContext('2d');
+        dbgCtx = canvas.getContext('2d');
         canvas.style.display = 'block';
     }
-
-    fmesh = await facemesh.load({ detectionConfidence: 0.9, maxFaces: 1 });
 
     lookAtRandom();
     blink();
     
     requestAnimationFrame(render);
 })();
+
+worker.onmessage = data => {
+    facepred = data.data;
+};
