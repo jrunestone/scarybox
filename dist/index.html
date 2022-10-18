@@ -14,12 +14,12 @@
         .pupil { position: relative; width: 175px; }
         .shadow { position: absolute; left: 0; }
         #eye-left { left: 70px; }
-        #eye-right { left: 620px; }
+        #eye-right { left: 1000px; }
         #facecanvas { display: none; position: absolute; top: 448px; }
     </style>
 </head>
 <body>
-    <div class="eye"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/><img class="shadow" src="shadow-l.png"/><div class="lid lid-upper"></div><div class="lid lid-lower"></div></div>
+    <div class="eye" id="eye-left"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-left" src="pupil.png"/><img class="shadow" src="shadow-l.png"/><div class="lid lid-upper"></div><div class="lid lid-lower"></div></div>
     <div class="eye" id="eye-right"><img class="ball" src="ball.png"/><img class="pupil" id="pupil-right" src="pupil.png"/><img class="shadow" src="shadow-r.png"/><div class="lid lid-upper"></div><div class="lid lid-lower"></div></div>
     
     <video autoplay muted playsinline hidden id="video" style="width: auto; height: auto;"></video>
