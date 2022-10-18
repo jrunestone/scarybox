@@ -4,6 +4,7 @@ const DEVICE_WIDTH = 1016;
 const DEVICE_HEIGHT = 455;
 const DEBUG = window.location.search.indexOf('debug=1') !== -1;
 let FACE = true;
+let FULLSCREEN = false;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('facecanvas');
@@ -22,7 +23,7 @@ const max = { x: 178, y: 182 };
 let position = {...min};
 
 document.getElementById('eye-right').onclick = () => { FACE = !FACE; }
-document.getElementById('eye-left').onclick = () => { document.body.webkitRequestFullscreen(); }
+document.getElementById('eye-left').onclick = () => { FULLSCREEN = !FULLSCREEN; FULLSCREEN ? document.documentElement.webkitRequestFullscreen() : document.webkitExitFullscreen(); }
 
 // Face Mesh Demo by Andy Kong
 // Base Javascript for setting up a camera-streaming HTML webpage.
